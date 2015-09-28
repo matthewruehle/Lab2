@@ -12,7 +12,7 @@ public class FeedSchema implements BaseColumns {
     public static final String TEXT_TYPE = " TEXT,";
     public static final String INTEGER_TYPE = " INTEGER";
     public static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE" + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY," +
+            "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY," +
                     URLS_COLUMN + TEXT_TYPE + POSITION_COLUMN + INTEGER_TYPE +
                     " )";
     public static final String SQL_DELETE_TABLE =

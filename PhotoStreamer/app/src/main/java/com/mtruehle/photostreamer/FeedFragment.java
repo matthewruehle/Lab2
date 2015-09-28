@@ -1,8 +1,8 @@
 package com.mtruehle.photostreamer;
 
-
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.app.Fragment;
+//import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +37,11 @@ public class FeedFragment extends Fragment {
         Button unsaveButton = (Button) feedLayout.findViewById(R.id.unsave_button_feed);
         Button nextButton = (Button) feedLayout.findViewById(R.id.next_button_feed);
         webView = (WebView) feedLayout.findViewById(R.id.feed_webView);
+        webView.loadUrl("https://upload.wikimedia.org/wikipedia/commons/6/67/Orange_juice_1_edit1.jpg");
+
         helper = new FeedDbHelper(getContext());
-        currentlyDisplayedImage = -1;
-        savedUrls = helper.readFeedDb();
+//        currentlyDisplayedImage = -1;
+        updateSavedUrls();
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,8 +62,9 @@ public class FeedFragment extends Fragment {
         });
         if (savedUrls.size() != 0) {
             currentlyDisplayedImage = 0;
-            updateWebView();
+//            updateWebView();
         }
+        Log.i("PRINTER", "Got to here...");
         return inflater.inflate(R.layout.fragment_feed, container, false);
     }
 
@@ -71,12 +74,13 @@ public class FeedFragment extends Fragment {
             currentlyDisplayedImage = -1;
         } else {
             currentlyDisplayedImage = 0;
-            updateWebView();
+//            updateWebView();
         }
     }
 
     public void updateWebView() {
         String urlToShow = savedUrls.get(currentlyDisplayedImage);
+        Log.i("PRINTER", "FeedFragment : updateWebView about to run...");
         try {
             webView.loadUrl(urlToShow);
             Log.i("PRINTER", urlToShow);
@@ -89,8 +93,8 @@ public class FeedFragment extends Fragment {
     public void goToPrevious() {
         if (currentlyDisplayedImage != -1) {
             currentlyDisplayedImage = currentlyDisplayedImage - 1;
-            while (currentlyDisplayedImage < 0) {
-                currentlyDisplayedImage = 10 + currentlyDisplayedImage;
+            if (currentlyDisplayedImage < 0) {
+                currentlyDisplayedImage = savedUrls.size() - 1;
             }
             updateWebView();
         }
@@ -99,8 +103,8 @@ public class FeedFragment extends Fragment {
     public void goToNext() {
         if (currentlyDisplayedImage != -1) {
             currentlyDisplayedImage = currentlyDisplayedImage + 1;
-            while (currentlyDisplayedImage >= 10) {
-                currentlyDisplayedImage = currentlyDisplayedImage - 10;
+            if (currentlyDisplayedImage >= savedUrls.size()) {
+                currentlyDisplayedImage = 0;
             }
             updateWebView();
         }

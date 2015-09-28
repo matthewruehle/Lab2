@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * wheeee.
  */
 public class FeedDbHelper extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "Feed.db";
     private SQLiteDatabase writableFeedDb;
     private SQLiteDatabase readableFeedDb;
@@ -43,9 +43,9 @@ public class FeedDbHelper extends SQLiteOpenHelper{
     public boolean writeToDatabase(String urlToSave) {
         ContentValues insertValues = new ContentValues();
         insertValues.put(FeedSchema.URLS_COLUMN, urlToSave);
-//        insertValues.put(FeedSchema.POSITION_COLUMN, position);
         try {
             writableFeedDb.insertOrThrow(FeedSchema.TABLE_NAME, null, insertValues);
+            Log.i("PRINTER", "writeToDatabase looks like it worked.");
             return true;
         } catch (Exception ex) {
             Log.e("FeedDbHelper", "Error inserting", ex);
@@ -70,9 +70,8 @@ public class FeedDbHelper extends SQLiteOpenHelper{
     }
 
     public boolean deleteEntryFromFeed(String urlToDelete) {
-
         String selection = FeedSchema.URLS_COLUMN + "= ? ";
-        int deleteRows = readableFeedDb.delete(FeedSchema.TABLE_NAME, selection, new String[] {urlToDelete});
+        readableFeedDb.delete(FeedSchema.TABLE_NAME, selection, new String[] {urlToDelete});
         return true;
     }
 //

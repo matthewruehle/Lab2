@@ -10,6 +10,8 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
     private SearchFragment sf;
     private FeedFragment ff;
+    private FragmentManager fm;
+    private FragmentTransaction t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sf = new SearchFragment();
         ff = new FeedFragment();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction t = fm.beginTransaction();
+        fm = getSupportFragmentManager();
+        t = fm.beginTransaction();
         t.replace(R.id.container, sf);
         t.commit();
     }
@@ -33,16 +35,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_go_feed:
+//                fm = getSupportFragmentManager();
+                ff = new FeedFragment();
+//                ff.updateSavedUrls();
+                t = fm.beginTransaction();
+                t.replace(R.id.container, ff);
+                t.commit();
+                break;
+            case R.id.action_go_search:
+//                fm = getSupportFragmentManager();
+                t = fm.beginTransaction();
+                t.replace(R.id.container, sf);
+                t.commit();
+                break;
+            default:
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

@@ -3,4 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_go_search" android:title="@string/go_search"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_go_feed" android:title="@string/go_feed"
+        android:orderInCategory="100" app:showAsAction="never" />
+
 </menu>

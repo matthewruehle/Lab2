@@ -11,4 +11,6 @@
     <string name="save">Save</string>
     <string name="next">Next</string>
     <string name="unsave">Unsave</string>
+    <string name="go_feed">View feed...</string>
+    <string name="go_search">Search for new images...</string>
 </resources>
