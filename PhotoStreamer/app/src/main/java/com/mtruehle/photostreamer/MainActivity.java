@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
     private FeedFragment ff;
     private FragmentManager fm;
     private FragmentTransaction t;
+    private boolean currentlyInFeed; // toggle to keep from switching fragments unnecessarily.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         fm = getSupportFragmentManager();
         t = fm.beginTransaction();
         t.replace(R.id.container, sf);
+        currentlyInFeed = false;
         t.commit();
     }
 
@@ -37,22 +39,34 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_go_feed:
-//                fm = getSupportFragmentManager();
-                ff = new FeedFragment();
-//                ff.updateSavedUrls();
-                t = fm.beginTransaction();
-                t.replace(R.id.container, ff);
-                t.commit();
+                switchToFeed();
                 break;
             case R.id.action_go_search:
-//                fm = getSupportFragmentManager();
-                t = fm.beginTransaction();
-                t.replace(R.id.container, sf);
-                t.commit();
+                switchToSearch();
                 break;
             default:
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void switchToFeed() {
+        if (!currentlyInFeed) {
+            t = fm.beginTransaction();
+            t.replace(R.id.container, ff);
+            currentlyInFeed = true;
+            t.commit();
+        }
+    }
+
+
+
+    public void switchToSearch()  {
+        if (currentlyInFeed) {
+            t = fm.beginTransaction();
+            t.replace(R.id.container, sf);
+            currentlyInFeed = false;
+            t.commit();
+        }
     }
 }

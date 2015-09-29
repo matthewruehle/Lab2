@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * wheeee.
  */
 public class FeedDbHelper extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5; // right now I just increment this when I want to clear the database. Probably sketchy practice.
     public static final String DATABASE_NAME = "Feed.db";
     private SQLiteDatabase writableFeedDb;
     private SQLiteDatabase readableFeedDb;
@@ -66,6 +66,17 @@ public class FeedDbHelper extends SQLiteOpenHelper{
                 imageLinks.add(feedCursor.getString(0));
             }
         }
+        String tempLogDb;
+        int dbSize;
+        dbSize = imageLinks.size();
+        tempLogDb = Integer.toString(dbSize);
+        if (dbSize > 20) {
+            dbSize = 20;
+        }
+        for (int i = 0; i < dbSize; i++) {
+            tempLogDb = tempLogDb + "\t" + imageLinks.get(i);
+        }
+        Log.i("PRINTER", tempLogDb);
         return imageLinks;
     }
 

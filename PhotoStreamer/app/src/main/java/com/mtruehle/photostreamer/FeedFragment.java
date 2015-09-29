@@ -2,7 +2,6 @@ package com.mtruehle.photostreamer;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-//import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
  */
 public class FeedFragment extends Fragment {
     private FeedDbHelper helper;
-    private WebView webView;
+    public WebView feedView;
     private int currentlyDisplayedImage;
     private ArrayList<String> savedUrls;
 
@@ -36,9 +35,10 @@ public class FeedFragment extends Fragment {
         Button backButton = (Button) feedLayout.findViewById(R.id.back_button_feed);
         Button unsaveButton = (Button) feedLayout.findViewById(R.id.unsave_button_feed);
         Button nextButton = (Button) feedLayout.findViewById(R.id.next_button_feed);
-        webView = (WebView) feedLayout.findViewById(R.id.feed_webView);
-        webView.loadUrl("https://upload.wikimedia.org/wikipedia/commons/6/67/Orange_juice_1_edit1.jpg");
-
+        feedView = (WebView) feedLayout.findViewById(R.id.feed_webView);
+        Toast.makeText(getActivity(), "About to load an image...", Toast.LENGTH_SHORT).show();
+        feedView.loadUrl("http://wisdomchasers.net/wp-content/uploads/2014/11/helloworld.gif");
+        Toast.makeText(getActivity(), "Just loaded an image...", Toast.LENGTH_SHORT).show();
         helper = new FeedDbHelper(getContext());
 //        currentlyDisplayedImage = -1;
         updateSavedUrls();
@@ -82,7 +82,7 @@ public class FeedFragment extends Fragment {
         String urlToShow = savedUrls.get(currentlyDisplayedImage);
         Log.i("PRINTER", "FeedFragment : updateWebView about to run...");
         try {
-            webView.loadUrl(urlToShow);
+            feedView.loadUrl(urlToShow);
             Log.i("PRINTER", urlToShow);
         } catch (Exception ex) {
             ex.printStackTrace();

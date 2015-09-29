@@ -9,18 +9,16 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
+//import com.android.volley.Request;
+//import com.android.volley.RequestQueue;
+//import com.android.volley.Response;
+//import com.android.volley.VolleyError;
+//import com.android.volley.toolbox.JsonObjectRequest;
+//import com.android.volley.toolbox.Volley;
+//import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -33,6 +31,7 @@ public class SearchFragment extends Fragment {
     private WebView webView;
     private int currentlyDisplayedImage;
     private ArrayList<String> searchResults;
+    private String mostRecentQuery;
 
     public SearchFragment() {
         // apparently this empty public constructor is required.
@@ -57,7 +56,8 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 EditText searchField = (EditText) getActivity().findViewById(R.id.search_box);
                 String thingToSearch = searchField.getText().toString();
-                imageSearch(thingToSearch);
+                imageSearch(thingToSearch, false);
+                mostRecentQuery = thingToSearch;
                 Log.i("PRINTER", "testing");
             }
         });
@@ -90,8 +90,9 @@ public class SearchFragment extends Fragment {
     public void goToPrevious() {
         if (currentlyDisplayedImage != -1) {
             currentlyDisplayedImage = currentlyDisplayedImage - 1;
-            while (currentlyDisplayedImage < 0) {
-                currentlyDisplayedImage = 10 + currentlyDisplayedImage;
+            if (currentlyDisplayedImage < 0) {
+                currentlyDisplayedImage = 0;
+                Toast.makeText(getActivity(), "Already at beginning.", Toast.LENGTH_SHORT).show();
             }
             updateWebView();
         }
@@ -100,16 +101,16 @@ public class SearchFragment extends Fragment {
     public void goToNext() {
         if (currentlyDisplayedImage != -1) {
             currentlyDisplayedImage = currentlyDisplayedImage + 1;
-            while (currentlyDisplayedImage >= 10) {
-                currentlyDisplayedImage = currentlyDisplayedImage - 10;
+            if (currentlyDisplayedImage >= searchResults.size()) {
+                imageSearch(mostRecentQuery, true);
+            } else {
+                updateWebView();
             }
-            updateWebView();
         }
     }
 
     public void updateWebView() {
         String urlToShow = searchResults.get(currentlyDisplayedImage);
-//        Toast.makeText(getActivity(), urlToShow, Toast.LENGTH_LONG).show();
         try {
             webView.loadUrl(urlToShow);
             Log.i("PRINTER", urlToShow);
@@ -127,7 +128,7 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    public void imageSearch(String searchQuery) {
+    public void imageSearch(String searchQuery, final boolean getAnotherPage) {
         Toast.makeText(getActivity(), "Searching for \"" + searchQuery + "\"...", Toast.LENGTH_SHORT).show(); // Will probably erase this for the final version; right now it's useful having this feedback while debugging.
         handler.imageSearch(searchQuery, new Callback() {
             @Override
@@ -135,8 +136,15 @@ public class SearchFragment extends Fragment {
                 if (!success || links.get(0) == "ERROR") {
                     Log.e("Error", "Valid image locations not received.");
                 } else {
-                    currentlyDisplayedImage = 0;
-                    searchResults = links;
+                    if (!getAnotherPage) {
+                        currentlyDisplayedImage = 0;
+                        searchResults = links;
+                    } else {
+                        currentlyDisplayedImage = searchResults.size();
+                        for (int i = 0; i < links.size(); i++) {
+                            searchResults.add(links.get(i)); // There's probably a cleaner way to add one ArrayList to another, but this works for now.
+                        }
+                    }
                     updateWebView();
                 }
             }
