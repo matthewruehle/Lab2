@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class FeedFragment extends Fragment {
     private FeedDbHelper helper;
-    public WebView feedView;
+    private WebView feedView;
     private int currentlyDisplayedImage;
     private ArrayList<String> savedUrls;
 
@@ -36,11 +36,7 @@ public class FeedFragment extends Fragment {
         Button unsaveButton = (Button) feedLayout.findViewById(R.id.unsave_button_feed);
         Button nextButton = (Button) feedLayout.findViewById(R.id.next_button_feed);
         feedView = (WebView) feedLayout.findViewById(R.id.feed_webView);
-        Toast.makeText(getActivity(), "About to load an image...", Toast.LENGTH_SHORT).show();
-        feedView.loadUrl("http://wisdomchasers.net/wp-content/uploads/2014/11/helloworld.gif");
-        Toast.makeText(getActivity(), "Just loaded an image...", Toast.LENGTH_SHORT).show();
         helper = new FeedDbHelper(getContext());
-//        currentlyDisplayedImage = -1;
         updateSavedUrls();
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,12 +56,8 @@ public class FeedFragment extends Fragment {
                 goToNext();
             }
         });
-        if (savedUrls.size() != 0) {
-            currentlyDisplayedImage = 0;
-//            updateWebView();
-        }
-        Log.i("PRINTER", "Got to here...");
-        return inflater.inflate(R.layout.fragment_feed, container, false);
+        return feedLayout;
+
     }
 
     public void updateSavedUrls() {
@@ -74,13 +66,12 @@ public class FeedFragment extends Fragment {
             currentlyDisplayedImage = -1;
         } else {
             currentlyDisplayedImage = 0;
-//            updateWebView();
+            updateWebView();
         }
     }
 
     public void updateWebView() {
         String urlToShow = savedUrls.get(currentlyDisplayedImage);
-        Log.i("PRINTER", "FeedFragment : updateWebView about to run...");
         try {
             feedView.loadUrl(urlToShow);
             Log.i("PRINTER", urlToShow);

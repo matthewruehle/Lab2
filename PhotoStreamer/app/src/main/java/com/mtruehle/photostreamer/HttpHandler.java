@@ -28,10 +28,11 @@ public class HttpHandler {
         queue = Volley.newRequestQueue(context);
     }
 
-    public void imageSearch(String searchQuery, Callback callback) {
+    public void imageSearch(String searchQuery, int offset, Callback callback) {
         final Callback staticCallback = callback;
         searchQuery = searchQuery.replaceAll(" ", "+");
-        String URL = BASE_URL + "?key=" + API_KEY + "&cx=" + SEARCH_ENGINE_ID + "&q=" + searchQuery + "&searchType=image";
+        String offsetString = Integer.toString(offset+1);
+        String URL = BASE_URL + "?key=" + API_KEY + "&cx=" + SEARCH_ENGINE_ID + "&q=" + searchQuery + "&start=" + offsetString + "&searchType=image";
         JSONObject body = new JSONObject(); // not sure what this is for. will try to find out later.
         JsonObjectRequest getRequest = new JsonObjectRequest(
                 Request.Method.GET,

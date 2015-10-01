@@ -130,7 +130,11 @@ public class SearchFragment extends Fragment {
 
     public void imageSearch(String searchQuery, final boolean getAnotherPage) {
         Toast.makeText(getActivity(), "Searching for \"" + searchQuery + "\"...", Toast.LENGTH_SHORT).show(); // Will probably erase this for the final version; right now it's useful having this feedback while debugging.
-        handler.imageSearch(searchQuery, new Callback() {
+        int searchOffset = 0;
+        if (getAnotherPage) {
+            searchOffset = searchResults.size();
+        }
+        handler.imageSearch(searchQuery, searchOffset, new Callback() {
             @Override
             public void callback(ArrayList<String> links, boolean success) {
                 if (!success || links.get(0) == "ERROR") {
